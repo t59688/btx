@@ -8,7 +8,7 @@
 
 这是一个完整的 AI 艺术风格转换解决方案，它包含了一个用户友好的微信小程序前端、一个强大的 FastAPI 后端，以及一个功能齐全的 Vue 3 管理后台。
 
-**本项目的所有代码，从前端到后端，几乎完全由 AI 辅助生成**。开源此项目，希望能为社区提供一个完整的、可落地的参考案例，并与大家一同探索 AI 在软件开发领域的应用潜力。
+**本项目的所有代码，从前端到后端，几乎完全由 AI 辅助生成**。开源此项目，希望提供一个完整的、可落地的参考案例。
 
 ## ✨ 项目截图
 <img width="1461" height="876" alt="屏幕截图 2025-08-25 092019" src="https://github.com/user-attachments/assets/3c86de8e-1728-41e8-a898-35fc40ca3b34" />
@@ -18,6 +18,11 @@
 <img width="1393" height="680" alt="屏幕截图 2025-08-25 091249" src="https://github.com/user-attachments/assets/9d2faa93-ddeb-4352-8dcd-4251f032cd16" />
 
 <img width="1305" height="548" alt="屏幕截图 2025-08-25 091507" src="https://github.com/user-attachments/assets/6c4bc1b2-86ef-4a4b-baed-b79be4c869b8" />
+
+## 在线体验
+
+![gh_08ae0d2de8e0_258 (1)](https://github.com/user-attachments/assets/77fbb821-5b19-48a4-b4a2-e11bc77a62df)
+
 
 ## 🚀 主要功能
 
