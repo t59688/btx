@@ -11,6 +11,13 @@
 **本项目的所有代码，从前端到后端，几乎完全由 AI 辅助生成**。开源此项目，希望能为社区提供一个完整的、可落地的参考案例，并与大家一同探索 AI 在软件开发领域的应用潜力。
 
 ## ✨ 项目截图
+<img width="1461" height="876" alt="屏幕截图 2025-08-25 092019" src="https://github.com/user-attachments/assets/3c86de8e-1728-41e8-a898-35fc40ca3b34" />
+
+<img width="1414" height="769" alt="屏幕截图 2025-08-25 092046" src="https://github.com/user-attachments/assets/b8b619aa-2f4e-48e6-9538-6730aad118b3" />
+
+<img width="1393" height="680" alt="屏幕截图 2025-08-25 091249" src="https://github.com/user-attachments/assets/9d2faa93-ddeb-4352-8dcd-4251f032cd16" />
+
+<img width="1305" height="548" alt="屏幕截图 2025-08-25 091507" src="https://github.com/user-attachments/assets/6c4bc1b2-86ef-4a4b-baed-b79be4c869b8" />
 
 ## 🚀 主要功能
 
