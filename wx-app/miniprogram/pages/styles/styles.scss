@@ -1,0 +1,239 @@
+// wx-app/miniprogram/pages/styles/styles.scss
+
+// --- 变量定义 ---
+$ios-background-gray: #f2f2f7;
+$ios-content-background: #ffffff;
+$ios-primary-text: #1c1c1e;
+$ios-secondary-text: #8e8e93;
+$ios-tertiary-text: #c6c6c8;
+$ios-blue: #007aff;
+$ios-red: #ff3b30;
+$ios-green: #34c759;
+$ios-orange: #ff9500;
+$ios-separator-line: rgba(60, 60, 67, 0.29);
+$ios-placeholder-gray: #e5e5ea;
+
+// --- 全局页面样式 ---
+page {
+  background-color: $ios-background-gray;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.styles-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: $ios-background-gray;
+}
+
+// --- 搜索栏 ---
+.search-bar-container {
+  padding: 16rpx 32rpx;
+  background-color: $ios-content-background;
+  border-bottom: 1rpx solid $ios-separator-line;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  height: 72rpx;
+  background-color: darken($ios-background-gray, 3%);
+  border-radius: 12rpx;
+  padding: 0 16rpx;
+
+  .search-icon {
+    margin-right: 12rpx;
+    opacity: 0.5;
+  }
+
+  .search-input {
+    flex: 1;
+    height: 100%;
+    font-size: 28rpx;
+    color: $ios-primary-text;
+  }
+
+  .clear-icon {
+    opacity: 0.5;
+  }
+}
+
+// --- 分类选择器 ---
+.category-scroll {
+  white-space: nowrap;
+  padding: 20rpx 0 20rpx 32rpx;
+  background-color: $ios-content-background;
+  border-bottom: 1rpx solid $ios-placeholder-gray;
+  position: relative;
+  z-index: 10;
+
+  .category-item {
+    display: inline-block;
+    padding: 10rpx 28rpx;
+    margin-right: 16rpx;
+    font-size: 28rpx;
+    color: $ios-blue;
+    background-color: rgba($ios-blue, 0.1);
+    border-radius: 30rpx;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+
+    &.active {
+      background-color: $ios-blue;
+      color: #ffffff;
+    }
+  }
+}
+
+// --- 空状态 ---
+.state-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  text-align: center;
+
+  .state-image {
+    width: 280rpx;
+    height: 280rpx;
+    margin-bottom: 40rpx;
+    opacity: 0.7;
+  }
+
+  .state-text {
+    font-size: 30rpx;
+    color: $ios-secondary-text;
+    margin-bottom: 50rpx;
+    line-height: 1.5;
+  }
+}
+
+// --- 风格滚动区域 ---
+.styles-scroll {
+  flex: 1;
+  height: 0; // 让 flex 生效
+  box-sizing: border-box;
+  padding: 0 16rpx;
+  width: 100%;
+}
+
+// --- 风格网格 ---
+.styles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 两列布局
+  gap: 16rpx;
+  padding: 20rpx 16rpx;
+}
+
+// --- 风格项目 ---
+.style-item {
+  background-color: $ios-content-background;
+  border-radius: 16rpx;
+  overflow: hidden;
+  position: relative;
+  opacity: 0; // 初始透明，配合动画
+  animation: fadeIn 0.5s ease forwards; // 淡入动画
+
+  .image-container {
+    width: 100%;
+    padding-top: 100%; // 1:1 宽高比
+    position: relative;
+    background-color: $ios-placeholder-gray; // 图片加载前占位符
+
+    .style-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // 填充方式
+    }
+  }
+
+  .item-info {
+    padding: 16rpx;
+    background-color: $ios-content-background;
+
+    .style-name {
+      display: flex;
+      align-items: center;
+      font-size: 26rpx;
+      color: $ios-primary-text;
+      font-weight: 500;
+      margin-bottom: 6rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .style-dot {
+        width: 12rpx;
+        height: 12rpx;
+        border-radius: 50%;
+        margin-right: 8rpx;
+      }
+    }
+
+    .style-usage {
+      font-size: 22rpx;
+      color: $ios-secondary-text;
+      display: block;
+    }
+  }
+
+  // 点击效果
+  &.item-hover {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-out;
+  }
+}
+
+// --- 动画 ---
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// --- 加载状态 ---
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30rpx 0;
+  color: $ios-secondary-text;
+  font-size: 26rpx;
+
+  .loading-indicator {
+    width: 32rpx;
+    height: 32rpx;
+    border: 4rpx solid $ios-tertiary-text;
+    border-top-color: $ios-secondary-text;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 16rpx;
+  }
+
+  .loading-text {
+    color: $ios-secondary-text;
+  }
+}
+
+// --- 无更多数据 ---
+.no-more-container {
+  text-align: center;
+  padding: 40rpx 0 60rpx;
+  color: $ios-tertiary-text;
+  font-size: 24rpx;
+
+  .no-more-text {
+    color: $ios-tertiary-text;
+  }
+}
+
+// --- 旋转动画 ---
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+} 

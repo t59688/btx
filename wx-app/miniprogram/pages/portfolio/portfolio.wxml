@@ -1,0 +1,177 @@
+<!--portfolio.wxml-->
+<view class="portfolio-page">
+
+  <!-- 分段控件 (Segmented Control) -->
+  <view class="segmented-control-container">
+    <view class="segmented-control">
+      <view
+        class="segment {{activeTab === 'all' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="all"
+      >全部</view>
+      <view
+        class="segment {{activeTab === 'public' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="public"
+      >已发布</view>
+      <view
+        class="segment {{activeTab === 'private' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="private"
+      >私密</view>
+    </view>
+  </view>
+
+  <!-- 未登录状态 -->
+  <view class="state-container" wx:if="{{!isLoggedIn}}">
+    <image class="state-image" src="/images/state_login.png" mode="aspectFit"></image>
+    <text class="state-text">登录后查看您的作品集</text>
+    <button class="state-button primary" bindtap="login">微信授权登录</button>
+  </view>
+
+  <!-- 无作品状态 (已登录) -->
+  <view class="state-container" wx:elif="{{isLoggedIn && portfolio.length === 0 && !isLoading}}">
+    <image class="state-image" src="/images/no_data.png" mode="aspectFit"></image>
+    <text class="state-text">您还没有创作任何作品</text>
+    <button class="state-button primary" bindtap="goToCreate">开始创作</button>
+  </view>
+
+  <!-- 作品列表 (已登录) -->
+  <scroll-view
+    class="portfolio-scroll"
+    wx:else
+    scroll-y
+    lower-threshold="200"
+    bindscrolltolower="loadMore"
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{isRefreshing}}"
+    bindrefresherrefresh="onPullDownRefresh"
+    refresher-background="#f2f2f7"
+    refresher-default-style="black"
+  >
+    <view class="portfolio-grid">
+      <view
+        class="portfolio-item"
+        wx:for="{{portfolio}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        hover-class="item-hover"
+        bindlongpress="handleLongPressArtwork"
+        style="animation-delay: {{(index % limit) * 0.05}}s;"
+      >
+        <!-- 图片展示容器 -->
+        <view class="image-container" bindtap="viewDetail" data-id="{{item.id}}">
+          <!-- 处理中或失败状态显示 -->
+          <block wx:if="{{item.status !== 'completed'}}">
+          <image
+            class="portfolio-image"
+              src="{{item.sourceImageUrl || '/images/placeholder_loading.png'}}"
+            mode="aspectFill"
+            lazy-load="{{true}}"
+          ></image>
+            <view class="status-overlay">
+              <text wx:if="{{item.status === 'processing'}}" class="status-text">处理中 {{item.progress ? (item.progress + '%') : '...'}}</text>
+             <text wx:if="{{item.status === 'failed'}}" class="status-text error">处理失败</text>
+              
+              <!-- 处理中进度条 -->
+              <view wx:if="{{item.status === 'processing' && item.progress}}" class="progress-bar-container">
+                <view class="progress-bar" style="width: {{item.progress}}%;"></view>
+              </view>
+            </view>
+          </block>
+          
+          <!-- 完成状态显示对比图 -->
+          <block wx:else>
+            <view class="compare-container" catch:longpress="handleLongPressArtwork" data-id="{{item.id}}">
+              <!-- 标签移到这里，确保始终可见 -->
+              <text class="image-label source-label">原图</text>
+              <text class="image-label result-label">效果</text>
+              
+              <!-- 效果图 (底层) -->
+              <view class="result-image-wrapper">
+                <image class="result-image" src="{{item.resultImageUrl}}" mode="aspectFill"></image>
+              </view>
+              
+              <!-- 原图 (上层，通过clip-path: polygon裁剪) -->
+              <view class="source-image-wrapper" style="clip-path: polygon(0% 0%, {{sliderPositions[item.id]}}% 0%, {{sliderPositions[item.id]}}% 100%, 0% 100%);">
+                <image class="source-image" src="{{item.sourceImageUrl}}" mode="aspectFill"></image>
+              </view>
+              
+              <!-- 滑动分割线 -->
+              <view class="slider-container" style="left: {{sliderPositions[item.id]}}%;">
+                <view class="slider-divider"></view>
+                <view class="slider-handle" catch:touchmove="onSliderMove" catch:touchstart="onSliderStart" catch:touchend="onSliderEnd" data-id="{{item.id}}">
+                  <view class="slider-handle-circle">
+                    <view class="slider-handle-arrows">
+                      <view class="arrow left"></view>
+                      <view class="arrow right"></view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              
+              <!-- 公开/私密状态标签 -->
+              <view class="privacy-badge {{item.isPublic ? 'public' : 'private'}}">
+                {{item.isPublic ? (item.publicScope === 'all' ? '全部公开' : '仅效果公开') : '私密'}}
+              </view>
+              
+              <!-- 已完成标签 -->
+              <view class="complete-badge">已完成</view>
+            </view>
+          </block>
+        </view>
+        
+        <!-- 作品信息 -->
+        <view class="item-info">
+          <view class="info-line">
+            <text class="item-style">{{item.styleName || '未知风格'}}</text>
+            <text class="item-date">{{item.createTime}}</text>
+          </view>
+        </view>
+
+        <!-- 快捷操作按钮 -->
+        <!-- 只在 完成 或 失败 状态下显示操作区 -->
+        <view class="action-buttons-container" wx:if="{{item.status === 'completed' || item.status === 'failed'}}">
+          <!-- 完成状态显示所有按钮 -->
+          <block wx:if="{{item.status === 'completed'}}">
+            <view class="action-button" catch:tap="togglePrivacy" data-id="{{item.id}}" data-is-public="{{item.isPublic}}">
+              <view class="button-icon {{item.isPublic ? 'public-icon' : 'private-icon'}}"></view>
+              <!-- <text class="button-text">{{item.isPublic ? '公开' : '私密'}}</text>  -->
+            </view>
+            <view class="action-button" catch:tap="shareArtwork" data-id="{{item.id}}">
+              <view class="button-icon share-icon"></view>
+              <!-- <text class="button-text">分享</text> -->
+            </view>
+            <view class="action-button" catch:tap="saveImage" data-url="{{item.resultImageUrl}}">
+              <view class="button-icon save-icon"></view>
+              <!-- <text class="button-text">保存</text> -->
+            </view>
+          </block>
+
+          <!-- 无论完成还是失败状态都显示重新生成按钮 -->
+          <view class="action-button" catch:tap="regenerateArtwork" data-id="{{item.id}}">
+            <view class="button-icon regenerate-icon"></view>
+            <!-- <text class="button-text">重新生成</text> -->
+          </view>
+
+          <!-- 完成 和 失败 状态都显示删除按钮 -->
+          <view class="action-button delete" catch:tap="promptDelete" data-id="{{item.id}}">
+            <view class="button-icon delete-icon"></view>
+            <!-- <text class="button-text">删除</text> -->
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-container" wx:if="{{isLoading && portfolio.length > 0}}">
+      <view class="loading-indicator"></view>
+      <text class="loading-text">正在加载更多...</text>
+    </view>
+
+    <!-- 无更多数据 -->
+    <view class="no-more-container" wx:if="{{noMoreData && portfolio.length > 0}}">
+      <text class="no-more-text">没有更多作品了</text>
+    </view>
+  </scroll-view>
+</view> 

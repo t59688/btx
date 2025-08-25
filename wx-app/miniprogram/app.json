@@ -1,0 +1,72 @@
+{
+  "pages": [
+    "pages/gallery/gallery",
+    "pages/styles/styles",
+    "pages/create/create",
+    "pages/portfolio/portfolio",
+    "pages/profile/profile",
+    "pages/login/login",
+    "pages/privacy/privacy",
+    "pages/profile/credits-history/credits-history",
+    "pages/profile/orders/orders"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "画廊",
+    "backgroundColor": "#eeeeee",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#8e8e93",
+    "selectedColor": "#007aff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/gallery/gallery",
+        "text": "画廊",
+        "iconPath": "images/tabbar/gallery.png",
+        "selectedIconPath": "images/tabbar/gallery_selected.png"
+      },
+      {
+        "pagePath": "pages/styles/styles",
+        "text": "风格",
+        "iconPath": "images/tabbar/styles.png",
+        "selectedIconPath": "images/tabbar/styles_selected.png"
+      },
+      {
+        "pagePath": "pages/create/create",
+        "text": "创建",
+        "iconPath": "images/tabbar/create.png",
+        "selectedIconPath": "images/tabbar/create_selected.png"
+      },
+      {
+        "pagePath": "pages/portfolio/portfolio",
+        "text": "作品集",
+        "iconPath": "images/tabbar/portfolio.png",
+        "selectedIconPath": "images/tabbar/portfolio_selected.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tabbar/profile.png",
+        "selectedIconPath": "images/tabbar/profile_selected.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "rendererOptions": {
+    "skyline": {
+      "defaultDisplayBlock": true,
+      "defaultContentBox": true,
+      "tagNameStyleIsolation": "legacy",
+      "disableABTest": true,
+      "sdkVersionBegin": "3.0.0",
+      "sdkVersionEnd": "15.255.255"
+    }
+  },
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

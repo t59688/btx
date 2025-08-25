@@ -1,0 +1,93 @@
+<!-- gallery.wxml -->
+<view class="gallery-page">
+  <!-- 排序控件 (Segmented Control) -->
+  <view class="segmented-control-container">
+    <view class="segmented-control">
+      <view class="segment {{sortType === 'popular' ? 'active' : ''}}" bindtap="setSortType" data-type="popular">
+        热度
+      </view>
+      <view class="segment {{sortType === 'latest' ? 'active' : ''}}" bindtap="setSortType" data-type="latest">
+        最新
+      </view>
+      <view class="segment {{sortType === 'likes' ? 'active' : ''}}" bindtap="setSortType" data-type="likes">
+        点赞
+      </view>
+
+    </view>
+  </view>
+  <!-- 空状态 (无结果或初始空白) -->
+  <view class="state-container" wx:if="{{artworks.length === 0 && !isLoading}}">
+    <image class="state-image" src="/images/no_data.png" mode="aspectFit"></image>
+    <text class="state-text">画廊还没有作品</text>
+  </view>
+  <!-- 画廊网格 -->
+  <scroll-view class="gallery-scroll" wx:else scroll-y lower-threshold="300" bindscrolltolower="loadMoreArtworks" refresher-enabled="{{true}}" refresher-triggered="{{isRefreshing}}" bindrefresherrefresh="onPullDownRefresh" refresher-background="#f2f2f7" refresher-default-style="black">
+    <view class="gallery-grid">
+      <view class="gallery-item" wx:for="{{artworks}}" wx:key="id" bindtap="viewArtworkDetail" bindlongpress="handleLongPressArtwork" data-id="{{item.id}}" hover-class="item-hover" style="animation-delay: {{(index % limit) * 0.05}}s;">
+        <view class="image-container">
+          <!-- 没有原始图片时只显示结果图 -->
+          <block wx:if="{{!item.source_image_url}}">
+            <image class="gallery-image" src="{{item.result_image_url || '/images/placeholder_loading.png'}}" mode="aspectFill" lazy-load="{{true}}" catch:longpress="handleLongPressArtwork" data-id="{{item.id}}"></image>
+          </block>
+          <!-- 有原始图片时显示对比效果 -->
+          <block wx:else>
+            <view class="compare-container" catch:longpress="handleLongPressArtwork" data-id="{{item.id}}">
+              <!-- 标签移到这里，不受裁剪影响 -->
+              <text class="image-label source-label">原图</text>
+              <text class="image-label result-label">效果</text>
+              <!-- 效果图 (底层) -->
+              <view class="result-image-wrapper">
+                <image class="result-image" src="{{item.result_image_url}}" mode="aspectFill"></image>
+              </view>
+              <!-- 原图 (上层，通过clip-path: polygon裁剪) -->
+              <view class="source-image-wrapper" style="clip-path: polygon(0% 0%, {{item.sliderPosition || 50}}% 0%, {{item.sliderPosition || 50}}% 100%, 0% 100%);">
+                <image class="source-image" src="{{item.source_image_url}}" mode="aspectFill"></image>
+              </view>
+              <!-- 滑动分割线 -->
+              <view class="slider-container" style="left: {{item.sliderPosition || 50}}%;">
+                <view class="slider-divider"></view>
+                <view class="slider-handle" catch:touchmove="onSliderMove" catch:touchstart="onSliderStart" catch:touchend="onSliderEnd" data-id="{{item.id}}">
+                  <view class="slider-handle-circle">
+                    <view class="slider-handle-arrows">
+                      <view class="arrow left"></view>
+                      <view class="arrow right"></view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </block>
+          <!-- 作者信息 -->
+          <view class="author-info" wx:if="{{item.user}}">
+            <image class="author-avatar" src="{{item.user.avatar_url }}" mode="aspectFill"></image>
+            <text class="author-name">{{item.user.nickname || '匿名用户'}}</text>
+          </view>
+          <!-- 点赞按钮 -->
+          <view class="like-button {{item.isLiked ? 'liked' : ''}}" catchtap="toggleLike" data-id="{{item.id}}" data-index="{{index}}">
+            <image class="like-icon" src="{{item.isLiked ? '/images/liked.png' : '/images/like.png'}}"></image>
+          </view>
+        </view>
+        <!-- 作品信息 -->
+        <view class="item-info">
+          <text class="item-style">{{item.style_name || '未知风格'}}</text>
+          <!-- 添加点赞信息显示 -->
+          <view class="like-info" wx:if="{{item.likes_count > 0}}">
+            <image class="like-icon-info" src="/images/liked.png"></image>
+            <!-- 使用灰色图标 -->
+            <text class="like-count-info">{{item.likes_count}}</text>
+          </view>
+          <!-- <text class="item-date">{{item.formattedCreateTime}}</text> -->
+        </view>
+      </view>
+    </view>
+    <!-- 加载状态 -->
+    <view class="loading-container" wx:if="{{isLoading && artworks.length > 0}}">
+      <view class="loading-indicator"></view>
+      <text class="loading-text">正在加载...</text>
+    </view>
+    <!-- 无更多数据 -->
+    <view class="no-more-container" wx:if="{{noMoreData && artworks.length > 0}}">
+      <text class="no-more-text">没有更多作品了</text>
+    </view>
+  </scroll-view>
+</view>

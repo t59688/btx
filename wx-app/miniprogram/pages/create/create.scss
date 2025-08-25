@@ -1,0 +1,286 @@
+/* create.scss */
+/* 需要编译成 create.wxss */
+
+// 定义一些基础变量 (近似 Tailwind 颜色)
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$blue-500: #3b82f6;
+$blue-600: #2563eb;
+$blue-700: #1d4ed8;
+$red-500: #ef4444;
+$yellow-500: #eab308; // For processing message
+$green-600: #16a34a; // For success message
+$white: #ffffff;
+
+// 基础容器和卡片样式
+.container {
+  padding: 0; // 删除四周边距
+  background-color: $gray-50;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  max-width: 100%; 
+  background-color: $white;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; // 让卡片占满整个视口高度
+  position: relative; // 为底部固定按钮准备
+}
+
+// 头部样式
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx; // ~ p-5
+  border-bottom: 1px solid $gray-200;
+
+  .title {
+    font-size: 36rpx; // ~ text-xl
+    font-weight: 600; // ~ font-semibold
+    color: $gray-800;
+  }
+
+  .points-display {
+    display: flex;
+    align-items: center;
+    gap: 8rpx; // ~ gap-1
+    font-size: 26rpx; // ~ text-sm
+    color: $gray-600;
+
+    .points-icon {
+      font-size: 1em; // Use text size for emoji
+      color: $yellow-500; // Make star yellow
+      vertical-align: middle;
+    }
+
+    .points-value {
+      font-weight: 700; // ~ font-bold
+      color: $blue-600;
+      font-size: 30rpx; // ~ text-base
+    }
+  }
+}
+
+// 主要内容区域
+.main-content {
+  padding: 30rpx 30rpx 0 30rpx; // 移除底部内边距，因为按钮部分单独占据空间
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx; // ~ space-y-5
+  height: calc(100vh - 190rpx); // 减去header和action-section的高度
+  overflow: hidden; // 防止内容溢出
+  box-sizing: border-box; // 确保padding不影响整体高度计算
+}
+
+// Section 通用样式
+.section {
+  .section-title {
+    display: block;
+    font-size: 28rpx; // ~ text-base
+    font-weight: 500; // ~ font-medium
+    color: $gray-600;
+    margin-bottom: 16rpx; // ~ mb-2
+  }
+}
+
+// 图片上传区域
+.image-preview-container {
+  width: 100%;
+  height: 300rpx; // 固定高度
+  min-height: unset; // 移除最小高度设置
+  border-radius: 16rpx; // ~ rounded-xl
+  border: 2px dashed $gray-300;
+  background-color: $gray-100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+
+  &:active { // Simulate hover effect on tap
+    background-color: $gray-200;
+    border-color: $gray-500;
+  }
+
+  .image-preview {
+    width: 100%;
+    max-height: 450rpx; // ~ max-h-300px
+    border-radius: 12rpx; // ~ rounded-lg
+  }
+
+  .preview-text {
+    color: $gray-500;
+    padding: 32rpx;
+    text-align: center;
+    font-size: 28rpx;
+  }
+}
+
+// 风格选择区域
+.style-selection-scroll {
+  flex: 1; // 让它占满剩余空间
+  width: 100%;
+  overflow-y: auto; // 确保可以滚动
+  -webkit-overflow-scrolling: touch; // 增强iOS滚动体验
+  // 调整高度计算方式，确保底部有足够空间
+  height: calc(100vh - 630rpx); // 稍微减少高度，确保底部留有余量
+  padding-bottom: 20rpx; // 添加底部内边距
+}
+
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // Always 2 columns for simplicity on mobile
+  gap: 20rpx; // ~ gap-3
+  padding-top: 5rpx;
+  padding-left: 20rpx;
+  padding-right: 20rpx;
+  padding-bottom: 100rpx; // 添加底部内边距，确保最后一行完全显示
+}
+
+.style-card {
+  background-color: $white;
+  border-radius: 12rpx; // ~ rounded-lg
+  padding: 12rpx; // ~ p-2
+  text-align: center;
+  border: 1px solid $gray-200;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .style-preview-img {
+    width: 100%;
+    height: 180rpx; // ~ h-16 sm:h-20
+    border-radius: 8rpx; // ~ rounded-md
+    margin-bottom: 10rpx; // ~ mb-1.5
+    background-color: $gray-100; // Placeholder background
+  }
+
+  .style-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 6rpx;
+  }
+
+  .style-name {
+    font-size: 20rpx; // ~ text-xs
+    font-weight: 500; // ~ font-medium
+    color: $gray-700;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 10rpx;
+    text-overflow: ellipsis; // ~ truncate
+  }
+
+  .style-cost {
+    font-size: 20rpx; // ~ text-xs
+    color: $blue-500;
+    padding-right: 10rpx;
+    white-space: nowrap;
+  }
+
+  &.selected {
+    border-color: $blue-500;
+    transform: scale(1.03);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+  }
+}
+
+// 操作区域
+.action-section {
+  padding: 24rpx 30rpx;
+  border-top: 1px solid $gray-100;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $white;
+  z-index: 100; // 增加z-index确保显示在最上层
+  height: 140rpx;
+  box-sizing: border-box;
+}
+
+.create-button {
+  width: 100%;
+  background-color: $blue-500;
+  color: $white;
+  font-size: 30rpx; // Match button text size
+  font-weight: 600; // ~ font-semibold
+  padding: 18rpx 0; // ~ py-2.5
+  border-radius: 12rpx; // ~ rounded-lg
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06); // ~ shadow
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  display: flex; // Use flex for icon alignment
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx; // ~ gap-0.3rem
+  line-height: 1.5; // Ensure text vertical alignment
+  margin: 0; // Reset default button margin
+
+  &::after { // Remove button border
+      border: none;
+  }
+
+  &:not([disabled]):active { // Active state
+    background-color: $blue-700;
+    transform: scale(0.98);
+    box-shadow: none;
+  }
+
+  &.disabled, &[disabled] { // Disabled state - use class and attribute selector
+    background-color: $gray-300; // ~ bg-gray-400
+    color: $gray-500;
+    box-shadow: none;
+    opacity: 0.7; // Match opacity style
+  }
+
+  .button-cost {
+      display: inline-flex; // Use inline-flex for alignment within button
+      align-items: center;
+      font-weight: 400; // ~ font-normal
+      font-size: 24rpx; // ~ text-sm
+      margin-left: 8rpx;
+
+      .cost-icon {
+          font-size: 0.9em; // Smaller icon
+          margin-right: 4rpx; // Space after icon
+          vertical-align: middle;
+      }
+  }
+}
+
+.feedback-message {
+  margin-top: 20rpx; // ~ mt-3
+  height: 40rpx; // ~ h-5 (adjust based on font size)
+  font-size: 24rpx; // ~ text-sm
+  color: $gray-600; // Default color
+
+  &.error {
+    color: $red-500;
+  }
+  &.processing {
+    color: $yellow-500;
+  }
+  &.success {
+    color: $green-600;
+  }
+}

@@ -1,0 +1,136 @@
+<!--profile.wxml-->
+<view class="profile-page">
+
+  <!-- 未登录状态 -->
+  <!-- <view wx:if="{{!isLoggedIn}}" class="profile-section login-section">
+    <button class="login-button" bindtap="goToLogin">登录 / 注册</button>
+  </view> -->
+
+
+  <view class="state-container" wx:if="{{!isLoggedIn}}">
+    <image class="state-image" src="/images/state_login.png" mode="aspectFit"></image>
+    <text class="state-text">登录后查看您的数据</text>
+    <button class="state-button primary" bindtap="goToLogin">微信授权登录</button>
+  </view>
+
+  <!-- 已登录状态 -->
+  <block wx:else>
+    <!-- 用户信息卡片 -->
+    <view class="profile-section user-info-card">
+      <view class="avatar-container">
+        <image src="{{userInfo.avatar_url }}" alt="用户头像" class="avatar" mode="aspectFill"></image>
+      </view>
+      <text class="nickname">{{userInfo.nickname || '微信用户'}}</text>
+      <view class="stats">
+        <view class="stat-item">
+          <text class="stat-value">{{stats.artworkCount}}</text>
+          <text class="stat-label">作品</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.likesCount}}</text>
+          <text class="stat-label">获赞</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.credits}}</text>
+          <text class="stat-label">积分</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作列表 -->
+    <view class="profile-section action-list">
+      <!-- 我的积分 -->
+      <view class="action-item has-arrow" bindtap="goToCredits">
+        <view class="item-icon">
+          <view class="icon-bg" style="background-color: #ff9500;">
+            <!-- 替换为你的积分图标, 这里用文字代替 -->
+            <text class="icon-text">💰</text>
+          </view>
+        </view>
+        <text class="item-text">我的积分</text>
+      </view>
+      
+      <!-- 积分兑换 -->
+      <view class="action-item" bindtap="showActivateCardModal">
+        <view class="item-icon">
+          <view class="icon-bg" style="background-color: #5856d6;">
+            <text class="icon-text">🎟️</text>
+          </view>
+        </view>
+        <text class="item-text">积分兑换</text>
+      </view>
+      
+      <!-- 我的作品集 -->
+      <view class="action-item has-arrow" bindtap="goToPortfolio">
+        <view class="item-icon">
+          <view class="icon-bg" style="background-color: #34c759;">
+             <!-- 替换为你的作品集图标, 这里用文字代替 -->
+            <text class="icon-text">🖼️</text>
+          </view>
+        </view>
+        <text class="item-text">我的作品集</text>
+      </view>
+      
+      <!-- 订单查询 -->
+      <view class="action-item has-arrow" bindtap="goToOrders">
+        <view class="item-icon">
+          <view class="icon-bg" style="background-color: #007aff;">
+            <text class="icon-text">📋</text>
+          </view>
+        </view>
+        <text class="item-text">订单查询</text>
+      </view>
+    </view>
+
+    <!-- 积分商品卡片 -->
+    <view class="profile-section credits-products-card">
+      <view class="section-title">积分充值</view>
+      <view class="products-grid">
+        <view class="product-item" wx:for="{{products}}" wx:key="id" bindtap="selectProduct" data-id="{{item.id}}">
+          <view class="product-content {{selectedProductId === item.id ? 'selected' : ''}}">
+            <view class="product-credits">{{item.credits}}积分</view>
+            <view class="product-price">¥{{item.price}}</view>
+          </view>
+        </view>
+      </view>
+      <button class="pay-button" bindtap="handlePayment" disabled="{{!selectedProductId || isProcessingPayment}}">{{isProcessingPayment ? '处理中...' : '立即购买'}}</button>
+    </view>
+
+    <!-- 退出登录按钮 (独立区块) -->
+    <view class="profile-section logout-section">
+      <view class="logout-item" bindtap="handleLogout">
+        退出登录
+      </view>
+    </view>
+
+  </block>
+
+  <!-- 协议链接 -->
+  <view class="footer">
+    <navigator url="/pages/privacy/privacy" class="footer-link">服务协议</navigator>
+  </view>
+
+  <!-- 积分兑换弹窗 -->
+  <view class="modal-mask" wx:if="{{showActivateCardModal}}" bindtap="hideActivateCardModal">
+    <view class="modal-container" catchtap="preventBubble">
+      <view class="modal-header">
+        <text class="modal-title">积分兑换</text>
+        <view class="modal-close" bindtap="hideActivateCardModal">×</view>
+      </view>
+      <view class="modal-content">
+        <view class="card-key-input-container">
+          <text class="input-label">请输入卡密</text>
+          <input class="card-key-input" type="text" placeholder="请输入9位卡密" maxlength="9" bindinput="onCardKeyInput" value="{{cardKey}}"/>
+        </view>
+        <text class="modal-tip">卡密仅能使用一次，请妥善保管</text>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="hideActivateCardModal">取消</button>
+        <button class="modal-btn confirm {{cardKey.length === 9 ? '' : 'disabled'}}" 
+                bindtap="activateCardKey" disabled="{{cardKey.length !== 9 || isActivating}}">
+          {{isActivating ? '兑换中...' : '立即兑换'}}
+        </button>
+      </view>
+    </view>
+  </view>
+</view> 

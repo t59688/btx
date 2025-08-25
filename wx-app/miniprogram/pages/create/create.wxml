@@ -1,0 +1,62 @@
+<view class="container">
+  <view class="card">
+    <view class="header">
+      <text class="title">艺术风格转换</text>
+      <view class="points-display">
+        <text>积分: </text>
+        <text class="points-icon">✨</text>
+        <text class="points-value">{{currentPoints}}</text>
+      </view>
+    </view>
+
+    <view class="main-content">
+      <view class="section">
+        <text class="section-title">1. 点击下方区域上传图片</text>
+        <view class="image-preview-container" bindtap="handleImageUpload">
+          <view wx:if="{{isCompressingImage}}" class="compress-loading">
+            <text>图片预处理中...</text>
+          </view>
+          <image wx:if="{{imagePath && !isCompressingImage}}" src="{{imagePath}}" class="image-preview" mode="aspectFit" />
+          <text wx:elif="{{!imagePath && !isCompressingImage}}" class="preview-text">点击此处上传图片</text>
+        </view>
+      </view>
+
+      <view class="section" style="flex: 1;">
+        <text class="section-title">2. 选择艺术风格</text>
+        <view wx:if="{{isLoadingStyles}}" class="loading-indicator">正在加载风格...</view>
+        <scroll-view wx:else scroll-y class="style-selection-scroll">
+          <view class="style-grid">
+            <view
+              wx:for="{{allStyles}}"
+              wx:key="id"
+              class="style-card {{selectedStyle.id === item.id ? 'selected' : ''}}"
+              data-style="{{item}}"
+              bindtap="handleStyleSelect"
+            >
+              <image class="style-preview-img" src="{{item.preview_url}}" mode="aspectFill" lazy-load/>
+              <view class="style-info">
+                <text class="style-name">{{item.name}}</text>
+                <text class="style-cost">{{item.credits_cost}} 积分</text>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+      
+    <view class="action-section">
+      <button
+        class="create-button {{ (imageUploaded && selectedStyle && currentPoints >= selectedStyle.credits_cost) ? '' : 'disabled'}}"
+        bindtap="handleCreateClick"
+        disabled="{{ !(imageUploaded && selectedStyle && currentPoints >= selectedStyle.credits_cost) }}"
+      >
+        <text>{{createButtonText}}</text>
+        <view wx:if="{{showCostOnButton}}" class="button-cost">
+           <text class="cost-icon">⚡️</text>
+           <text>{{selectedStyle.credits_cost}} 积分</text>
+        </view>
+      </button>
+      <text class="feedback-message {{feedbackClass}}">{{feedbackMessage}}</text>
+    </view>
+  </view>
+</view>

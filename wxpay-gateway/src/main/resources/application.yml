@@ -1,0 +1,61 @@
+server:
+  port: ${SERVER_PORT:8081}
+  servlet:
+    context-path: ${CONTEXT_PATH:/api}
+  tomcat:
+    max-threads: ${TOMCAT_MAX_THREADS:200}
+    min-spare-threads: ${TOMCAT_MIN_SPARE_THREADS:20}
+
+# 日志配置
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.aozhiai.javap: ${LOG_LEVEL_APP:INFO}
+  file:
+    name: ${LOG_PATH:logs}/wxpay-service.log
+
+# Spring配置
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+# 业务后端服务配置
+business:
+  api:
+    base-url: ${BUSINESS_API_BASE_URL:xxxxxxxxxxx}
+    payment-update-url: ${BUSINESS_PAYMENT_UPDATE_URL:/orders/callback}
+    payment-token: ${BUSINESS_PAYMENT_TOKEN:xxxxxxxxxxx}
+
+# Spring Actuator配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ${ACTUATOR_ENDPOINTS:health,info,metrics}
+  endpoint:
+    health:
+      show-details: ${ACTUATOR_HEALTH_DETAILS:when-authorized}
+  health:
+    defaults:
+      enabled: true
+
+# 微信支付配置
+wechat:
+  pay:
+    app-id: ${WX_PAY_APP_ID:xxxxxxxxxxx}
+    mch-id: ${WX_PAY_MCH_ID:xxxxxxxxxxx}
+    mch-serial-no: ${WX_PAY_MCH_SERIAL_NO:xxxxxxxxxxx}
+    private-key-path: ${WX_PAY_PRIVATE_KEY_PATH:/app/cert/apiclient_key.pem}
+    api-v3-key: ${WX_PAY_API_V3_KEY:xxxxxxxxxxx}
+    platform-key-path: ${WX_PAY_PLATFORM_KEY_PATH:/app/cert/wechatpay_platform_cert.pem}
+    notify-url: ${WX_PAY_NOTIFY_URL:xxxxxxxxxxx}
+    refund-notify-url: ${WX_PAY_REFUND_NOTIFY_URL:xxxxxxxxxxx}
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  api-docs:
+    path: ${SPRINGDOC_API_DOCS_PATH:/v3/api-docs}
+  swagger-ui:
+    path: ${SPRINGDOC_SWAGGER_UI_PATH:/swagger-ui.html}
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:true}
+    operationsSorter: ${SPRINGDOC_SWAGGER_UI_SORTER:method}

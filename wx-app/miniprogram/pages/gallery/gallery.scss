@@ -1,0 +1,424 @@
+// wx-app/miniprogram/pages/gallery/gallery.scss
+
+// --- 变量定义 ---
+$ios-background-gray: #f2f2f7;
+$ios-content-background: #ffffff;
+$ios-primary-text: #1c1c1e;
+$ios-secondary-text: #8e8e93;
+$ios-tertiary-text: #c6c6c8;
+$ios-blue: #007aff;
+$ios-red: #ff3b30;
+$ios-green: #34c759;
+$ios-orange: #ff9500;
+$ios-separator-line: rgba(60, 60, 67, 0.29);
+$ios-placeholder-gray: #e5e5ea;
+
+// --- 全局页面样式 ---
+page {
+  background-color: $ios-background-gray;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.gallery-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: $ios-background-gray;
+}
+
+// --- 分段控件 (排序控件) ---
+.segmented-control-container {
+  padding: 20rpx 32rpx;
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #e5e5ea;
+}
+
+.segmented-control {
+  display: flex;
+  width: 100%;
+  background-color: #e9e9eb; // iOS Segmented Control 背景灰
+  border-radius: 14rpx;
+  padding: 4rpx;
+  box-sizing: border-box;
+
+  .segment {
+    flex: 1;
+    text-align: center;
+    padding: 10rpx 0;
+    font-size: 28rpx;
+    font-weight: 500;
+    color: #000000;
+    border-radius: 10rpx;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    cursor: pointer;
+
+    &.active {
+      background-color: #ffffff;
+      color: #007aff;
+      box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.06);
+    }
+  }
+}
+
+// --- 空状态 ---
+.state-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  text-align: center;
+
+  .state-image {
+    width: 280rpx;
+    height: 280rpx;
+    margin-bottom: 40rpx;
+    opacity: 0.7;
+  }
+
+  .state-text {
+    font-size: 30rpx;
+    color: $ios-secondary-text;
+    margin-bottom: 50rpx;
+    line-height: 1.5;
+  }
+}
+
+// --- 画廊滚动区域 ---
+.gallery-scroll {
+  flex: 1;
+  height: 0; // 让 flex 生效
+  box-sizing: border-box;
+  padding: 0 16rpx;
+  width: 100%;
+}
+
+// --- 画廊网格 ---
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 两列布局
+  gap: 16rpx;
+  padding: 20rpx 16rpx;
+}
+
+// --- 画廊项目 ---
+.gallery-item {
+  background-color: $ios-content-background;
+  border-radius: 16rpx;
+  overflow: hidden;
+  position: relative;
+  opacity: 0; // 初始透明，配合动画
+  animation: fadeIn 0.5s ease forwards; // 淡入动画
+
+  .image-container {
+    width: 100%;
+    padding-top: 100%; // 1:1 宽高比
+    position: relative;
+    background-color: $ios-placeholder-gray; // 图片加载前占位符
+
+    .gallery-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // 填充方式
+    }
+
+    // 对比效果容器样式
+    .compare-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      
+      // 结果图包装
+      .result-image-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        
+        .result-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      
+      // 原图包装
+      .source-image-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        
+        .source-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      
+      // 图片标签样式
+      .image-label {
+        position: absolute;
+        font-size: 20rpx;
+        color: white;
+        padding: 4rpx 12rpx;
+        border-radius: 10rpx;
+        top: 10rpx;
+      }
+      
+      .source-label {
+        left: 10rpx;
+        z-index: 10; // 提高z-index确保始终可见
+        background-color: rgba(0, 122, 255, 0.7); // 使用iOS蓝色
+      }
+      
+      .result-label {
+        right: 10rpx;
+        z-index: 10; // 提高z-index确保始终可见
+        background-color: rgba(52, 199, 89, 0.7); // 使用iOS绿色
+      }
+      
+      // 滑块样式
+      .slider-container {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        z-index: 3;
+        width: 6rpx;
+        
+        .slider-divider {
+          position: absolute;
+          width: 4rpx;
+          height: 100%;
+          background-color: white;
+          left: 0;
+          top: 0;
+          box-shadow: 0 0 4rpx rgba(0, 0, 0, 0.3);
+        }
+        
+        .slider-handle {
+          position: absolute;
+          width: 56rpx;
+          height: 56rpx;
+          top: 50%;
+          left: -28rpx;
+          transform: translateY(-50%);
+          
+          .slider-handle-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1rpx 8rpx rgba(0, 0, 0, 0.3);
+            
+            .slider-handle-arrows {
+              display: flex;
+              align-items: center;
+              
+              .arrow {
+                width: 0;
+                height: 0;
+                border-top: 6rpx solid transparent;
+                border-bottom: 6rpx solid transparent;
+              }
+              
+              .left {
+                border-right: 8rpx solid #8e8e93;
+                margin-right: 4rpx;
+              }
+              
+              .right {
+                border-left: 8rpx solid #8e8e93;
+                margin-left: 4rpx;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // 作者信息
+    .author-info {
+      position: absolute;
+      bottom: 10rpx;
+      left: 10rpx;
+      display: flex;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.5); // 半透明背景
+      padding: 6rpx 12rpx;
+      border-radius: 20rpx;
+      z-index: 4;
+
+      .author-avatar {
+        width: 36rpx;
+        height: 36rpx;
+        border-radius: 50%;
+        margin-right: 8rpx;
+        background-color: $ios-placeholder-gray;
+      }
+
+      .author-name {
+        font-size: 22rpx;
+        color: #ffffff;
+        font-weight: 500;
+        max-width: 120rpx; // 限制宽度
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    // 点赞按钮
+    .like-button {
+      position: absolute;
+      bottom: 10rpx;
+      right: 10rpx;
+      display: flex; // 继续使用 flex 居中图标
+      align-items: center;
+      justify-content: center; // 图标居中
+      padding: 8rpx; // 调整内边距，仅包裹图标
+      border-radius: 50%; // 改为圆形
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: 4;
+      transition: transform 0.2s ease;
+      width: 52rpx; // 固定宽度
+      height: 52rpx; // 固定高度
+      box-sizing: border-box; // 包含 padding
+
+      .like-icon {
+        width: 32rpx; // 稍微调整图标大小
+        height: 32rpx;
+        margin-right: 0; // 移除右边距
+        filter: drop-shadow(0 1rpx 2rpx rgba(0, 0, 0, 0.5));
+      }
+
+      &.liked {
+        // 点赞后的样式可以保持或调整
+      }
+
+      &:active {
+          transform: scale(0.9);
+      }
+    }
+  }
+
+  .item-info {
+    padding: 16rpx;
+    background-color: $ios-content-background;
+    display: flex; // 使用 flex 布局
+    justify-content: space-between; // 分散对齐
+    align-items: center; // 垂直居中
+
+    .item-style {
+      font-size: 26rpx;
+      color: $ios-primary-text;
+      font-weight: 500;
+      // margin-bottom: 6rpx; // 移除 margin-bottom
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      // display: block; // 不需要 block 了
+      flex: 1; // 占据多余空间
+      margin-right: 16rpx; // 与点赞信息保持距离
+    }
+
+    // 新增点赞信息样式
+    .like-info {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0; // 防止被压缩
+
+      .like-icon-info {
+        width: 28rpx; // 图标尺寸
+        height: 28rpx;
+        margin-right: 6rpx;
+      }
+
+      .like-count-info {
+        font-size: 24rpx;
+        color: $ios-secondary-text; // 使用次要文本颜色
+        font-weight: 500;
+      }
+    }
+
+    .item-date {
+      font-size: 22rpx;
+      color: $ios-secondary-text;
+      display: block;
+    }
+  }
+
+  // 点击效果
+  &.item-hover {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-out;
+  }
+}
+
+// --- 动画 ---
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// --- 加载状态 ---
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30rpx 0;
+  color: $ios-secondary-text;
+  font-size: 26rpx;
+
+  .loading-indicator {
+    width: 32rpx;
+    height: 32rpx;
+    border: 4rpx solid $ios-tertiary-text;
+    border-top-color: $ios-secondary-text;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 16rpx;
+  }
+
+  .loading-text {
+    color: $ios-secondary-text;
+  }
+}
+
+// --- 无更多数据 ---
+.no-more-container {
+  text-align: center;
+  padding: 40rpx 0 60rpx;
+  color: $ios-tertiary-text;
+  font-size: 24rpx;
+
+  .no-more-text {
+    color: $ios-tertiary-text;
+  }
+}
+
+// --- 旋转动画 ---
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// --- 其他辅助类 ---
+.hidden {
+  display: none !important;
+}

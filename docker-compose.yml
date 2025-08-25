@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  btx-b:
+    build:
+      context: ./service/business-backend
+      dockerfile: Dockerfile
+    container_name: btx-b
+    restart: always
+    ports:
+      - "5331:8000"
+    environment:
+      - TZ=Asia/Shanghai
+      - DB_HOST=btx-db
+      - DB_PORT=3306
+      - DB_USER=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_NAME=${MYSQL_DATABASE}
+      - PAYMENT_GATEWAY_URL=${PAYMENT_GATEWAY_URL:-xxxxxxxxxxx}
+      - PAYMENT_CALLBACK_TOKEN=${PAYMENT_CALLBACK_TOKEN:-xxxxxxxxxxx}
+    volumes:
+      - ./business-backend/logs:/app/logs
+    depends_on:
+      - btx-db
+    networks:
+      - btx-network
+
+  btx-p:
+    build:
+      context: ./service/wxpay-gateway
+      dockerfile: Dockerfile
+    container_name: btx-p
+    restart: always
+    ports:
+      - "5332:8081"
+    environment:
+      - TZ=Asia/Shanghai
+      # 应用配置
+      - SERVER_PORT=8081
+      - CONTEXT_PATH=/api
+      - LOG_PATH=/app/logs
+      - LOG_LEVEL_ROOT=INFO
+      - LOG_LEVEL_APP=INFO
+      
+      # 业务后端服务配置
+      - BUSINESS_API_BASE_URL=http://btx-b:8000/api
+      - BUSINESS_PAYMENT_UPDATE_URL=/orders/callback
+      - BUSINESS_PAYMENT_TOKEN=${BUSINESS_PAYMENT_TOKEN:-xxxxxxxxxxx}
+      
+      # 微信支付配置
+      - WX_PAY_APP_ID=${WX_PAY_APP_ID:-xxxxxxxxxxx}
+      - WX_PAY_MCH_ID=${WX_PAY_MCH_ID:-xxxxxxxxxxx}
+      - WX_PAY_MCH_SERIAL_NO=${WX_PAY_MCH_SERIAL_NO:-xxxxxxxxxxx}
+      - WX_PAY_PRIVATE_KEY_PATH=/app/cert/apiclient_key.pem
+      - WX_PAY_API_V3_KEY=${WX_PAY_API_V3_KEY:-xxxxxxxxxxx}
+      - WX_PAY_PLATFORM_KEY_PATH=/app/cert/wechatpay_platform_cert.pem
+      - WX_PAY_NOTIFY_URL=${WX_PAY_NOTIFY_URL:-https://xxx.xxxxxx.com/wx-pay/wechatpay/notify/payment}
+      - WX_PAY_REFUND_NOTIFY_URL=${WX_PAY_REFUND_NOTIFY_URL:-https://xxxx.xxxxxx.com/wx-pay/wechatpay/notify/refund}
+      
+      # SpringDoc OpenAPI配置
+      - SPRINGDOC_SWAGGER_UI_ENABLED=true
+    volumes:
+      - ./service/wxpay-gateway/logs:/app/logs
+      - ./service/wxpay-gateway/cert:/app/cert
+    depends_on:
+      - btx-db
+      - btx-b
+    networks:
+      - btx-network
+
+  btx-db:
+    build:
+      context: ./service/mysql
+      dockerfile: Dockerfile
+    container_name: btx-db
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "5333:3306"
+    networks:
+      - btx-network
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  btx-network:
+    driver: bridge

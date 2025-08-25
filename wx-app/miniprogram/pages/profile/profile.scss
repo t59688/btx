@@ -1,0 +1,700 @@
+/* --- Global Styles & Resets (更贴近iOS) --- */
+page {
+  background-color: #f2f2f7; /* iOS 标准背景灰 (Grouped Background) */
+  color: #000000; /* iOS 主要文字颜色 (Primary Label) */
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif; /* 优先使用苹果系统字体 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.4; /* 基础行高 */
+  padding: 40rpx 0; /* 上下留白 */
+}
+
+view, text, button, image, navigator {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  line-height: normal;
+  &::after {
+    border: none;
+  }
+}
+
+// 未登录 / 空状态
+.state-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  text-align: center;
+
+  .state-image {
+    width: 280rpx;
+    height: 280rpx;
+    margin-bottom: 40rpx;
+    opacity: 0.7;
+  }
+
+  .state-text {
+    font-size: 30rpx;
+    color: #8e8e93; // 辅助文字颜色
+    margin-bottom: 50rpx;
+    line-height: 1.5;
+  }
+
+  .state-button {
+    font-size: 32rpx;
+    color: #ffffff;
+    background-color: #007aff; // 主要操作色
+    border-radius: 40rpx;
+    padding: 18rpx 60rpx;
+    height: auto;
+    line-height: 1.4;
+    border: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+
+    &::after {
+      border: none;
+    }
+
+    &:active {
+      background-color: darken(#007aff, 10%);
+    }
+    // 可以添加 secondary 样式按钮
+    // &.secondary { ... }
+  }
+}
+
+
+navigator {
+  text-decoration: none;
+  color: #007aff; /* iOS 标准蓝色 (Link/Accent Color) */
+}
+
+/* --- Profile Page Container --- */
+.profile-page {
+  padding: 0 32rpx; /* 左右内边距 */
+}
+
+/* --- Section Spacing --- */
+.profile-section {
+  margin-bottom: 40rpx; /* 统一的区块间距 */
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+/* --- User Info Card (优化) --- */
+.user-info-card {
+  background-color: #ffffff; /* 卡片背景 */
+  border-radius: 20rpx; /* iOS 常用圆角 */
+  padding: 40rpx 32rpx; /* 内边距 */
+  text-align: center;
+}
+
+.avatar-container {
+  margin-bottom: 24rpx;
+}
+
+.avatar {
+  width: 144rpx;
+  height: 144rpx;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #e5e5ea; /* Placeholder color */
+  border: 1rpx solid rgba(0, 0, 0, 0.08); /* 更细的边框 */
+  display: inline-block; /* 防止下方空白 */
+  vertical-align: middle;
+}
+
+.nickname {
+  font-size: 44rpx; /* 调整字号 */
+  font-weight: 600; /* Semibold */
+  color: #000000;
+  margin-bottom: 32rpx; /* 增加与下方间距 */
+  line-height: 1.3;
+  display: block; // text 默认为 inline
+}
+
+/* --- Stats Section (优化) --- */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 32rpx;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 0 20rpx; /* 防止靠太近 */
+}
+
+.stat-value {
+  display: block;
+  font-size: 40rpx; /* 调整字号 */
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 4rpx; /* 微调 */
+}
+
+.stat-label {
+  display: block;
+  font-size: 26rpx; /* 不变 */
+  color: #8e8e93; /* iOS 辅助文字颜色 (Secondary Label) */
+}
+
+/* --- Action List (Grouped List Style) --- */
+.action-list {
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  overflow: hidden; /* 裁剪内部分隔线 */
+}
+
+/* --- Styles for items inside action-list --- */
+.action-item {
+  padding: 24rpx 32rpx;
+  font-size: 34rpx;
+  background-color: #ffffff;
+  transition: background-color 0.1s ease-out;
+  position: relative;
+
+  /* Add top separator to all items except the first */
+  &:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    /* Indent separator based on whether there's an icon */
+    left: 112rpx; /* Default indent for items with icons */
+    right: 0;
+    height: 1rpx;
+    background-color: #c6c6c8;
+    transform: scaleY(0.5);
+  }
+
+  /* 点击反馈效果 */
+  &:active {
+    background-color: #e5e5ea;
+  }
+  
+  /* Specific styles for action-item (icon, text, arrow) */
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+
+/* 图标容器样式 */
+.action-item .item-icon {
+  width: 56rpx;
+  height: 56rpx;
+  margin-right: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 示例：给图标加个背景色块 */
+.action-item .icon-bg {
+   width: 100%;
+   height: 100%;
+   border-radius: 12rpx;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #ffffff;
+   font-size: 36rpx;
+}
+
+.action-item .item-text {
+ flex-grow: 1;
+ line-height: 1.5;
+}
+
+/* iOS 列表项右侧的箭头 (Chevron) */
+.action-item.has-arrow::after {
+  content: '';
+  display: inline-block;
+  width: 16rpx;
+  height: 16rpx;
+  border-top: 4rpx solid #c6c6c8;
+  border-right: 4rpx solid #c6c6c8;
+  transform: rotate(45deg);
+  margin-left: 20rpx;
+}
+
+
+/* --- Logout Button Section --- */
+.logout-section {
+  /* Remove default margin bottom from profile-section if needed, or adjust */
+  /* margin-bottom: 0; */
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.logout-item {
+  display: flex;
+  justify-content: center;
+  padding: 24rpx 32rpx;
+  font-size: 34rpx;
+  color: #ff3b30; /* iOS 标准红色 */
+  background-color: #ffffff;
+  transition: background-color 0.1s ease-out;
+  
+  &:active {
+      background-color: #e5e5ea;
+  }
+  /* No separator needed as it's in its own section */
+}
+
+
+/* --- Login Button (未登录状态) --- */
+.login-section {
+   background-color: #ffffff;
+   border-radius: 20rpx;
+   overflow: hidden;
+}
+.login-button {
+   display: block;
+   padding: 24rpx 32rpx;
+   font-size: 34rpx;
+   color: #007aff; /* 标准蓝色 */
+   text-align: center;
+   background-color: #ffffff;
+   border: none;
+   width: 100%;
+   transition: background-color 0.1s ease-out;
+   border-radius: 0; // 移除按钮默认圆角
+   &::after { // 移除按钮默认边框
+     border: none;
+   }
+   &:active {
+       background-color: #e5e5ea;
+   }
+}
+
+
+/* --- Footer Links --- */
+.footer {
+  text-align: center;
+  padding: 40rpx 32rpx; /* 增加上下间距 */
+  font-size: 24rpx;
+  color: #8e8e93; /* Secondary Label */
+}
+
+.footer-link {
+  color: #007aff; /* Link color */
+  display: inline; /* 让navigator表现得像a标签 */
+  margin: 0 10rpx;
+}
+
+.footer-separator {
+  color: #8e8e93;
+}
+
+.container {
+  width: 100%;
+  min-height: calc(100vh - 180rpx);
+  background-color: #f5f5f7;
+  padding-bottom: 40rpx;
+  box-sizing: border-box;
+}
+
+// 用户信息区域
+.user-info-section {
+  background-color: #fff;
+  padding: 40rpx 32rpx;
+  margin-bottom: 16rpx;
+  // box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.05); // 移除阴影，更像iOS原生列表
+  
+  .user-info-content {
+    display: flex;
+    align-items: center;
+    
+    .avatar {
+      width: 120rpx;
+      height: 120rpx;
+      border-radius: 60rpx;
+      margin-right: 24rpx;
+      background-color: #f5f5f7;
+    }
+    
+    .user-details {
+      flex: 1;
+      
+      .nickname {
+        font-size: 34rpx;
+        font-weight: 500;
+        color: #1c1c1e;
+        margin-bottom: 8rpx;
+      }
+      
+      .user-id {
+        font-size: 24rpx;
+        color: #8e8e93;
+      }
+    }
+    
+    .login-btn-container {
+      // 调整为右对齐，或者根据具体设计调整
+      // flex: 1;
+      
+      .login-btn {
+        background-color: #007aff;
+        color: #fff;
+        font-size: 28rpx;
+        height: 76rpx;
+        line-height: 76rpx;
+        border-radius: 38rpx;
+        margin: 0;
+        padding: 0 36rpx;
+        display: inline-block;
+        font-weight: 500;
+        transition: opacity 0.2s ease;
+        
+        &:active {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+  
+  .user-stats {
+    display: flex;
+    margin-top: 40rpx;
+    padding-top: 24rpx;
+    border-top: 0.5rpx solid rgba(60, 60, 67, 0.08);
+    
+    .stat-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      
+      .stat-value {
+        font-size: 38rpx;
+        font-weight: 600;
+        color: #1c1c1e;
+      }
+      
+      .stat-label {
+        font-size: 24rpx;
+        color: #8e8e93;
+        margin-top: 8rpx;
+      }
+    }
+    
+    .stat-divider {
+      width: 0.5rpx;
+      background-color: rgba(60, 60, 67, 0.08);
+      // margin: 0 10rpx; // 移除多余的margin
+    }
+  }
+}
+
+// 按钮悬停效果
+.button-hover {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  opacity: 0.9;
+}
+
+// 功能列表容器
+.list-container {
+  margin-bottom: 16rpx;
+}
+
+// 功能列表
+.feature-list {
+  background-color: #fff;
+  // 移除外边距，由 list-container 控制
+  // margin-bottom: 16rpx; 
+  
+  .feature-group {
+    // 移除分组的外边距，因为现在整个list是一个整体
+    // margin-bottom: 16rpx;
+    
+    // &:last-child {
+    //   margin-bottom: 0;
+    // }
+  }
+  
+  .feature-item {
+    display: flex;
+    align-items: center;
+    padding: 28rpx 32rpx;
+    margin-left: 32rpx; // 左侧缩进
+    border-bottom: 0.5rpx solid rgba(60, 60, 67, 0.08);
+    transition: background-color 0.15s ease;
+    position: relative; // 用于分隔线伪元素
+    
+    // 移除最后一个元素的下边框
+    &:last-child {
+      border-bottom: none;
+    }
+
+    // 调整激活状态
+    &:active {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+    
+    .feature-icon {
+      width: 44rpx;
+      height: 44rpx;
+      margin-right: 24rpx;
+    }
+    
+    .feature-title {
+      flex: 1;
+      font-size: 30rpx;
+      color: #1c1c1e;
+      font-weight: 400;
+    }
+    
+    .arrow-icon {
+      width: 28rpx;
+      height: 28rpx;
+      opacity: 0.3;
+    }
+  }
+  
+  // 退出按钮样式调整，使其看起来像列表的一部分
+  .logout-btn {
+    width: 100%;
+    height: 90rpx;
+    line-height: 90rpx;
+    text-align: center;
+    font-size: 30rpx;
+    color: #ff3b30;
+    font-weight: 400; // 不再加粗，与其他列表项一致
+    // margin-top: 24rpx; // 移除外边距
+    background-color: #fff;
+    transition: background-color 0.15s ease;
+    border-top: 0.5rpx solid rgba(60, 60, 67, 0.08); // 添加上边框
+    
+    &:active {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+  }
+}
+
+// 分组标题
+.group-title {
+  font-size: 24rpx; // 稍微增大
+  color: #8e8e93;
+  font-weight: 400; // 调整字重
+  text-transform: none; // 移除大写转换
+  padding: 30rpx 32rpx 10rpx; // 调整内边距
+}
+
+/* --- 积分兑换弹窗 --- */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-container {
+  width: 85%;
+  max-width: 650rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
+  animation: scaleIn 0.2s ease-out;
+  transform-origin: center;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  padding: 32rpx 36rpx 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #000000;
+}
+
+.modal-close {
+  font-size: 48rpx;
+  font-weight: 200;
+  line-height: 0.8;
+  color: #8e8e93;
+  padding: 10rpx;
+  margin: -10rpx;
+}
+
+.modal-content {
+  padding: 36rpx;
+}
+
+.card-key-input-container {
+  margin-bottom: 24rpx;
+}
+
+.input-label {
+  display: block;
+  font-size: 28rpx;
+  color: #8e8e93;
+  margin-bottom: 12rpx;
+}
+
+.card-key-input {
+  width: 100%;
+  height: 90rpx;
+  border-radius: 12rpx;
+  border: 2rpx solid #d1d1d6;
+  background-color: #f9f9f9;
+  padding: 0 24rpx;
+  font-size: 36rpx;
+  color: #000000;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Mono", monospace;
+  letter-spacing: 1.5rpx;
+  transition: border-color 0.2s;
+}
+
+.card-key-input:focus {
+  border-color: #5856d6;
+  background-color: #ffffff;
+}
+
+.modal-tip {
+  display: block;
+  font-size: 24rpx;
+  color: #8e8e93;
+  line-height: 1.4;
+}
+
+.modal-footer {
+  display: flex;
+  border-top: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.modal-btn {
+  flex: 1;
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  font-size: 32rpx;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-btn.cancel {
+  color: #8e8e93;
+  font-weight: 400;
+  border-right: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.modal-btn.confirm {
+  color: #5856d6;
+  font-weight: 500;
+}
+
+.modal-btn.disabled {
+  color: #c7c7cc;
+}
+
+/* --- 积分商品卡片 --- */
+.credits-products-card {
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 30rpx;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.product-item {
+  width: 100%;
+  aspect-ratio: 1.5;
+}
+
+.product-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16rpx;
+  border: 2rpx solid #e5e5ea;
+  padding: 20rpx;
+  transition: all 0.2s ease;
+}
+
+.product-content.selected {
+  border-color: #007aff;
+  background-color: rgba(0, 122, 255, 0.05);
+}
+
+.product-credits {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 16rpx;
+}
+
+.product-price {
+  font-size: 30rpx;
+  color: #ff9500;
+  font-weight: 500;
+}
+
+.pay-button {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background-color: #007aff;
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 500;
+  border-radius: 44rpx;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.pay-button[disabled] {
+  background-color: #a2c7f3;
+  color: #ffffff;
+} 

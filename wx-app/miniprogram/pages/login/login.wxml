@@ -1,0 +1,49 @@
+<!-- login.wxml - Elegant & Artistic Redesign -->
+<view class="container">
+  <view class="header">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <text class="title">欢迎使用变图秀</text>
+    <text class="subtitle">登录后开启您的艺术创作之旅</text>
+  </view>
+  
+  <view class="login-form">
+    <view class="avatar-section">
+      <view class="avatar-container">
+        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+          <image class="avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
+          <view class="avatar-edit-icon">
+            <text class="icon">🎨</text>
+          </view>
+        </button>
+      </view>
+      <text class="tip" style="color: #8a8a8e; font-size: 24rpx;">点击设置头像</text>
+    </view>
+    
+    <view class="nickname-section">
+      <text class="label">昵称</text>
+      <input id="nickname-input" class="input" type="nickname" placeholder="为自己取一个艺术的昵称" placeholder-style="color: #bbb;" value="{{nickname}}" bindinput="onNicknameChange" bindblur="onNicknameBlur" />
+    </view>
+    
+    <button class="login-btn" bindtap="handleLoginClick" hover-class="login-btn-hover" disabled="{{!canLogin || isLoading}}">
+      <text wx:if="{{isLoading}}">正在进入工坊...</text>
+      <text wx:else>进入工坊</text>
+    </button>
+    
+  </view>
+  
+  <view class="privacy-policy">
+    <checkbox-group bindchange="onPolicyAgreementChange">
+      <view class="policy-checkbox-container">
+        <checkbox value="agree" checked="{{agreedToPolicy}}" class="policy-checkbox" />
+        <view class="policy-text-container">
+          <text class="policy-text">同意我们的</text>
+          <navigator url="/pages/privacy/privacy" class="policy-link">《用户协议与隐私政策》</navigator>
+        </view>
+      </view>
+    </checkbox-group>
+    <view class="policy-tip {{showPolicyTip ? 'show' : ''}}" wx:if="{{showPolicyTip}}">
+      <view class="policy-tip-arrow"></view>
+      <text>请勾选同意用户协议与隐私政策</text>
+    </view>
+  </view>
+</view> 

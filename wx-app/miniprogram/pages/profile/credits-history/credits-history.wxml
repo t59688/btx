@@ -1,0 +1,61 @@
+<!--credits-history.wxml-->
+<view class="credits-history-page">
+  <!-- 头部栏 -->
+  <view class="header">
+    <view class="header-content">
+      <view class="title-area">
+        <text class="title">我的积分</text>
+      </view>
+      <view class="balance-card">
+        <view class="balance-value">{{balance}}</view>
+        <view class="balance-label">当前积分</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 记录列表区域 -->
+  <view class="records-container">
+    <view class="section-title">积分记录</view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{records.length === 0 && !loading}}">
+      <image class="empty-image" src="/images/empty-credits.png" mode="aspectFit"></image>
+      <text class="empty-text">暂无积分记录</text>
+    </view>
+    
+    <!-- 加载中状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+    
+    <!-- 记录列表 -->
+    <view class="records-list" wx:if="{{records.length > 0}}">
+      <view class="record-item" wx:for="{{records}}" wx:key="id">
+        <view class="record-left">
+          <view class="record-type {{item.amount > 0 ? 'positive' : 'negative'}}">
+            <view class="type-icon"></view>
+          </view>
+          <view class="record-info">
+            <view class="record-description">{{item.description}}</view>
+            <view class="record-time">{{item.created_at}}</view>
+          </view>
+        </view>
+        <view class="record-amount {{item.amount > 0 ? 'positive' : 'negative'}}">
+          {{item.amount > 0 ? '+' : ''}}{{item.amount}}
+        </view>
+      </view>
+      
+      <!-- 加载更多 -->
+      <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMore">
+        <text wx:if="{{!loadingMore}}">加载更多</text>
+        <view wx:else class="loading-spinner small"></view>
+      </view>
+      
+      <!-- 没有更多数据 -->
+      <view class="no-more" wx:if="{{!hasMore && records.length > 0}}">
+        <text>— 没有更多记录了 —</text>
+      </view>
+    </view>
+  </view>
+</view> 

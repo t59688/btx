@@ -1,0 +1,93 @@
+<!--styles.wxml-->
+<view class="styles-page">
+
+  <!-- 搜索栏 -->
+  <view class="search-bar-container">
+    <view class="search-bar">
+      <icon class="search-icon" type="search" size="16"></icon>
+      <input
+        class="search-input"
+        placeholder="搜索风格"
+        placeholder-style="color:#c6c6c8;"
+        confirm-type="search"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        value="{{searchQuery}}"
+      />
+      <icon wx:if="{{searchQuery}}" class="clear-icon" type="clear" size="16" bindtap="clearSearch"></icon>
+    </view>
+  </view>
+  
+  <!-- 分类选择器 -->
+  <scroll-view class="category-scroll" scroll-x enable-flex enhanced show-scrollbar="{{false}}">
+    <view 
+      wx:for="{{categories}}" 
+      wx:key="id"
+      class="category-item {{currentCategory === item.id ? 'active' : ''}}"
+      bindtap="switchCategory"
+      data-id="{{item.id}}"
+    >
+      {{item.name}}
+    </view>
+  </scroll-view>
+  
+  <!-- 空状态 -->
+  <view class="state-container" wx:if="{{styles.length === 0 && !isLoading}}">
+    <image class="state-image" src="/images/no_data.png" mode="aspectFit"></image>
+    <text class="state-text">{{searchQuery ? '没有找到相关风格' : '暂无可用风格'}}</text>
+  </view>
+  
+  <!-- 风格列表 -->
+  <scroll-view
+    class="styles-scroll"
+    wx:else
+    scroll-y
+    lower-threshold="200"
+    bindscrolltolower="loadMoreStyles"
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{isRefreshing}}"
+    bindrefresherrefresh="onPullDownRefresh"
+    refresher-background="#f2f2f7"
+    refresher-default-style="black"
+  >
+    <view class="styles-grid">
+      <view
+        class="style-item"
+        wx:for="{{styles}}"
+        wx:key="id"
+        bindtap="selectStyle"
+        bindlongpress="selectStyle"
+        data-id="{{item.id}}"
+        hover-class="item-hover"
+        style="animation-delay: {{(index % limit) * 0.05}}s;"
+      >
+        <view class="image-container">
+          <image
+            class="style-image"
+            src="{{item.previewUrl}}"
+            mode="aspectFill"
+            lazy-load="{{true}}"
+          ></image>
+        </view>
+        <view class="item-info">
+          <view class="style-name">
+            <view class="style-dot" style="background-color: {{item.color}};"></view>
+            <text>{{item.name}}</text>
+          </view>
+          <text class="style-usage">积分: {{item.credits_cost || 0}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 加载状态 -->
+    <view class="loading-container" wx:if="{{isLoading && styles.length > 0}}">
+      <view class="loading-indicator"></view>
+      <text class="loading-text">正在加载更多...</text>
+    </view>
+    
+    <!-- 无更多数据 -->
+    <view class="no-more-container" wx:if="{{noMoreData && styles.length > 0}}">
+      <text class="no-more-text">没有更多风格了</text>
+    </view>
+  </scroll-view>
+</view> 
